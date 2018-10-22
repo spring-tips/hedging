@@ -6,21 +6,27 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-@RestController
+import java.util.Random;
+
 @Log4j2
+@RestController
+@SpringBootApplication
 public class ServiceApplication {
 
+	private long random(int seconds) {
+		return new Random().nextInt(seconds) * 1000;
+	}
+
 	@GetMapping("/hi")
-	String greet() throws Exception {
-		log.info("receiving #greet()");
-		long delay = Math.max(
-			(long) (Math.random() * (1000 * 5)), (long) (Math.random() * (1000 * 5)));
+	String greet() throws InterruptedException {
+		long delay = Math.max(random(5), random(5));
 		Thread.sleep(delay);
-		String msg = "Hello after " + delay + "ms.";
-		log.info("message: " + msg);
+		final String msg = "Hello, afte" +
+			"r " + delay + " ms.";
+		log.info("returning (" + msg + ")");
 		return msg;
 	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
